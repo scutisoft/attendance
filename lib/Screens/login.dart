@@ -11,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
 import '../size.dart';
+import 'homepage.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -55,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
     {
       
       Toast.show("Login succeess", context,gravity: Toast.CENTER);
-     // Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (BuildContext context) =>new HomeScreen(userdetails: users,)));
+      Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (BuildContext context) =>new HomeScreen(userdetails: users,)));
      // Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen(email : users[0].email)));
     }else{
 
@@ -191,6 +192,8 @@ class _LoginPageState extends State<LoginPage> {
                    obscureText: passwordvisible,
                  ),
              ),
+
+
 
 
 
