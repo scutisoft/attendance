@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:attendance/Screens/profilepage.dart';
 import 'package:attendance/Widget/rotatetext.dart';
 import 'package:attendance/Widget/typer.dart';
+import 'package:attendance/admin/adminattendancelist.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -106,7 +108,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
               ),
               title: Text("Profile", style: TextStyle(color: Colors.white)),
               onTap: () {
-               // Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (BuildContext context) =>new ProfileScreen(userdetails: widget.userdetails,)));
+                Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (BuildContext context) =>new ProfileScreen(userdetails: widget.userdetails,)));
 
               }),
           widget.userdetails[0].level=="admin"
@@ -118,7 +120,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
               title:
               Text("Admin", style: TextStyle(color: Colors.white)),
               onTap: () {
-              //  Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (BuildContext context) =>new AdminAttendanceScreen(userdetails: widget.userdetails,)));
+               Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (BuildContext context) =>new AdminAttendanceScreen(userdetails: widget.userdetails,)));
 
 
               })
@@ -193,81 +195,85 @@ class _HomeScreenmainState extends State<HomeScreenmain>
 
 
   getCurrentlocation(String da, String da2) async {
-    final geoposition = await GeolocatorPlatform.instance
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    final geoposition = await GeolocatorPlatform.instance.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
     setState(() async {
       i = geoposition.latitude;
       j = geoposition.longitude;
       latitudedata = geoposition.latitude.toString();
       longitudedata = geoposition.longitude.toString();
-      print("LATITUDE $latitudedata        LONGITUDE  $longitudedata");
       radiuscheck(geoposition.latitude, geoposition.longitude, da, da2);
 
       // addcindata(da, da2);
     });
   }
+//(80.1773947<=j&&j<=80.177489)
+
+  insertAttend(double lat, double long, String da, String da2) async {
+    var url = 'https://thermogenetic-membr.000webhostapp.com/attendance.php';
+    var data = {'email': widget.userdetails[0].email, 'name':widget.userdetails[0].name,
+      'date':da, 'attendance':'present', 'cintime':da2.substring(11,19),'couttime':'',
+      'late':DateTime.parse(da2).difference(DateTime.parse(DateFormat("yyyy-MM-dd 09:00:00").format(DateTime.now()))).toString().substring(0,4),
+      'extra':''
+    };
+    var response = await http.post(url, body: json.encode(data));
+    print(DateTime.parse(da2).difference(DateTime.parse(DateFormat("yyyy-MM-dd 09:00:00").format(DateTime.now()))).toString().substring(0,4));
+    print(response.body.toString());
+    rad = "You are in Tetrosoft";
+    this._setStatus("In");
+    todaydetails(widget.userdetails[0].email, df.format(DateTime.now()));
+}
+
 
   radiuscheck(double lat, double long, String da, String da2) {
-    (13.0646661 <= i && i <= 13.065)
-        ? setState(() async {
+    if(13.0646661 <= i && i <= 13.065){
+      if(80.1773847<=j&&j<=80.177489){
+        setState(() {
+           insertAttend(lat, long, da, da2);
 
-      var url = 'https://thermogenetic-membr.000webhostapp.com/attendance.php';
-      var data = {'email': widget.userdetails[0].email, 'name':widget.userdetails[0].name,
-      'date':da, 'attendance':'present', 'cintime':da2.substring(11,19),'couttime':'',
-        'late':DateTime.parse(da2).difference(DateTime.parse(DateFormat("yyyy-MM-dd 09:00:00").format(DateTime.now()))).toString().substring(0,4),
-        'extra':''
-      };
-      var response = await http.post(url, body: json.encode(data));
-      print(DateTime.parse(da2).difference(DateTime.parse(DateFormat("yyyy-MM-dd 09:00:00").format(DateTime.now()))).toString().substring(0,4));
-      print(response.body.toString());
-      rad = "You are in Tetrosoft";
-      this._setStatus("In");
-
-
-    })
-        : setState(() {
-      rad = "You are not in Tetrosoft";
-      this._setStatus("away");
-      loginloader=false;
-    });
+        });
+      }else{
+        setState(() {
+          rad = "You are not in Tetrosoft";
+          this._setStatus("away");
+          loginloader=false;
+        });
+      }
+    }else{
+      setState(() {
+        rad = "You are not in Tetrosoft";
+        this._setStatus("away");
+        loginloader=false;
+      });
+    }
   }
 
   addcoutdata(String email,String da, String da2) async {
     var url = 'https://thermogenetic-membr.000webhostapp.com/addcouttime.php';
-
     var data = {'email': email, 'date' : da, 'couttime':da2.substring(11,19), 'extra':DateTime.parse(da2).difference(DateTime.parse(DateFormat("yyyy-MM-dd 18:00:00").format(DateTime.now()))).toString().substring(0,4)};
-
     var response = await http.post(url, body: json.encode(data));
-    print(response.body.toString());
-
+    todaydetails(widget.userdetails[0].email, df.format(DateTime.now()));
   }
+
+
+
 
 
   todaydetails(String useremail, String da) async {
     var url = 'https://thermogenetic-membr.000webhostapp.com/todaydetails.php';
-
     var data = {'email': useremail, 'date' : da};
-
     var response = await http.post(url, body: json.encode(data));
-   // print(response.body.toString());
     final parsed = json.decode(response.body);
-
-  //  print(parsed[0]['cintime'].toString());
+    print("PASDAFSDSGFDGFDGFDHHSFH");
     setState(() {
       parsed!=null?cintime=parsed[0]['cintime'].toString():null;
      parsed!=null? couttime=parsed[0]['couttime'].toString():null;
     });
-  //  print(parsed.toString());
-    //users= parsed.map<User>((json) =>User.fromJson(json)).toList();
-
-
   }
 
 
   greeting() {
     var hour = DateTime.now().hour;
     if (hour < 12) {
-
       return Text("Good Morning",style: GoogleFonts.roboto(fontSize: 26,fontWeight: FontWeight.w500));
     }
     if (hour < 17) {
@@ -315,6 +321,9 @@ class _HomeScreenmainState extends State<HomeScreenmain>
     });
     print(response.body.toString());
   }
+
+
+
   @override
   void initState() {
     super.initState();
@@ -334,6 +343,7 @@ class _HomeScreenmainState extends State<HomeScreenmain>
       loginloader=false;
       logoutloader=false;
     });
+    todaydetails(widget.userdetails[0].email, df.format(DateTime.now()));
     // userLogin();
   }
   List<Color> _colors = [
@@ -341,17 +351,19 @@ class _HomeScreenmainState extends State<HomeScreenmain>
     Color.fromRGBO(247, 177, 66, 1),
 
   ];
+  DateFormat df = DateFormat("dd-MM-yyyy");
+  DateFormat df2 = DateFormat("yyyy-MM-dd HH:mm:ss");
+  String da,da2;
   //List<double> _stops = [0.5, 0.6];
   @override
   Widget build(BuildContext context) {
     double wid = MediaQuery.of(context).size.width;
     double hei = MediaQuery.of(context).size.height;
-    DateFormat df = DateFormat("dd-MM-yyyy");
-    DateFormat df2 = DateFormat("yyyy-MM-dd HH:mm:ss");
-    String da = df.format(DateTime.now());
-    String da2 = df2.format(DateTime.now());
 
-    todaydetails(widget.userdetails[0].email, da);
+     da = df.format(DateTime.now());
+     da2 = df2.format(DateTime.now());
+
+    //todaydetails(widget.userdetails[0].email, da);
     return GestureDetector(
         onTap: () {
           setState(() {
@@ -489,7 +501,7 @@ class _HomeScreenmainState extends State<HomeScreenmain>
                             ),
                             elevation: 0,
                             backgroundColor: Colors.transparent,
-                            child: _buildChild(dcontext,da,da2),
+                            child: _buildChild(dcontext,df.format(DateTime.now()),df2.format(DateTime.now())),
                           )
                            )
                       );
@@ -514,6 +526,8 @@ class _HomeScreenmainState extends State<HomeScreenmain>
                 SizedBox(
                   height: hei * 0.03,
                 ),
+                Text(longitudedata),
+                Text(latitudedata),
                 cintime != null
                     ? Text('  Check In Time: $cintime',style: GoogleFonts.roboto(),)
                     : Container(),
