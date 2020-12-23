@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'dart:io';
 import 'package:pdf/widgets.dart' as pdfLib;
 import 'package:attendance/Widget/liquidtext.dart';
 import 'package:attendance/models/attendance.dart';
@@ -11,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'pdfviewer.dart';
 class AdminAttendanceScreen extends StatefulWidget {
   List<User> userdetails;
   AdminAttendanceScreen({this.userdetails});
@@ -43,6 +46,12 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
         children: <Widget>[
           DrawerScreen(userdetails: userdetails),
           AdminAbsentList(),
+        ],
+      ),
+      Stack(
+        children: <Widget>[
+          DrawerScreen(userdetails: userdetails),
+          Report(),
         ],
       ),
      // HomeScreenmain(),
@@ -82,11 +91,11 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
         /*  BottomNavigationBarItem(
             icon: new Icon(Icons.leak_add),
             title: new Text('Leave Requests'),
-          ),
+          ),*/
           BottomNavigationBarItem(
             icon: new Icon(Icons.report),
             title: new Text('Reports'),
-          ),*/
+          ),
         ],
       ),
     );
@@ -1405,7 +1414,7 @@ class _AbsentCardState extends State<AbsentCard> {
   }
 }
 
-/*class presentreport {
+class presentreport {
   String date;
   String uid;
   String attend;
@@ -1499,30 +1508,30 @@ class _ReportState extends State<Report> {
 
    getdata(String fromdate,String todate) async {
     pr.clear();
-    Firestore.instance
-        .collection("dates")
-    .where("date",isGreaterThanOrEqualTo: fromdate)
-    .where("date",isLessThanOrEqualTo: todate)
-        .snapshots()
-        .forEach((res) {
-      res.documents.forEach((re) {
-         Firestore.instance.collection("adminattendance").document(re.documentID).collection("users").snapshots()
-         .forEach((element) {
-           element.documents.forEach((element) {
-           
-             setState(() {
-               pr.add(new presentreport(
-                 uid: element.data['name'],
-                 date: re.documentID,
-                 attend: element.data['attendance']
-               ));
-             });
-           });
-         });
-
-
-      });
-    });
+    // Firestore.instance
+    //     .collection("dates")
+    // .where("date",isGreaterThanOrEqualTo: fromdate)
+    // .where("date",isLessThanOrEqualTo: todate)
+    //     .snapshots()
+    //     .forEach((res) {
+    //   res.documents.forEach((re) {
+    //      Firestore.instance.collection("adminattendance").document(re.documentID).collection("users").snapshots()
+    //      .forEach((element) {
+    //        element.documents.forEach((element) {
+    //
+    //          setState(() {
+    //            pr.add(new presentreport(
+    //              uid: element.data['name'],
+    //              date: re.documentID,
+    //              attend: element.data['attendance']
+    //            ));
+    //          });
+    //        });
+    //      });
+    //
+    //
+    //   });
+    // });
   }
 
 
@@ -1535,15 +1544,15 @@ class _ReportState extends State<Report> {
   List<presentreport> ab = new List<presentreport>();
 
    getusers() async {
-      Firestore.instance.collection("users").snapshots().listen((res) {
-      res.documents.forEach((re) {
-        setState(() {
-          print("${re.documentID} g");
-          mapusers[re.documentID]=re.data['name'];
-          users.add(re.documentID);
-        });
-      });
-    });
+    //   Firestore.instance.collection("users").snapshots().listen((res) {
+    //   res.documents.forEach((re) {
+    //     setState(() {
+    //       print("${re.documentID} g");
+    //       mapusers[re.documentID]=re.data['name'];
+    //       users.add(re.documentID);
+    //     });
+    //   });
+    // });
   }
 
    getpresentees(String fromdate,String todate) async {
@@ -1553,51 +1562,51 @@ class _ReportState extends State<Report> {
     ab.clear();
 
 
-    Firestore.instance
-        .collection("dates")
-        .where("date",isGreaterThanOrEqualTo: fromdate)
-        .where("date",isLessThanOrEqualTo: todate)
-        .snapshots()
-        .forEach((res) {
-
-      res.documents.
-      forEach((re) {
-     mappresentess.clear();
-     presentees.clear();
-    print(re.documentID);
-        Firestore.instance.collection("adminattendance").document(re.documentID).collection("users").snapshots()
-            .forEach((element) {
-          element.documents.forEach((element) {
-
-            setState(() {
-             // presentees.add(element.documentID);
-            //  print(" ${re.documentID} ${element.documentID}");
-              mappresentess[element.documentID]=element.data['name'];
-             // print("P ${re.documentID}  ${mappresentess[element.documentID]}");
-
-
-            });
-          });
-
-
-
-       mapusers.forEach((key, value) {
-            if(!mappresentess.containsKey(key)){
-              print("A ${re.documentID} ${mapusers[key]}");
-              pr.add(new presentreport(
-                  date: re.documentID,
-                  uid: mapusers[key],
-                  attend: "Absent"
-              ));
-
-            }
-          });
-
-        });
-
-
-      });
-    });
+    // Firestore.instance
+    //     .collection("dates")
+    //     .where("date",isGreaterThanOrEqualTo: fromdate)
+    //     .where("date",isLessThanOrEqualTo: todate)
+    //     .snapshots()
+    //     .forEach((res) {
+    //
+    //   res.documents.
+    //   forEach((re) {
+    //  mappresentess.clear();
+    //  presentees.clear();
+    // print(re.documentID);
+    //     Firestore.instance.collection("adminattendance").document(re.documentID).collection("users").snapshots()
+    //         .forEach((element) {
+    //       element.documents.forEach((element) {
+    //
+    //         setState(() {
+    //          // presentees.add(element.documentID);
+    //         //  print(" ${re.documentID} ${element.documentID}");
+    //           mappresentess[element.documentID]=element.data['name'];
+    //          // print("P ${re.documentID}  ${mappresentess[element.documentID]}");
+    //
+    //
+    //         });
+    //       });
+    //
+    //
+    //
+    //    mapusers.forEach((key, value) {
+    //         if(!mappresentess.containsKey(key)){
+    //           print("A ${re.documentID} ${mapusers[key]}");
+    //           pr.add(new presentreport(
+    //               date: re.documentID,
+    //               uid: mapusers[key],
+    //               attend: "Absent"
+    //           ));
+    //
+    //         }
+    //       });
+    //
+    //     });
+    //
+    //
+    //   });
+    // });
 
   }
 
@@ -1617,10 +1626,10 @@ class _ReportState extends State<Report> {
     dates.add("30092020");
     dates.add("31092020");
     dates.add("11092020");
-    User user3 = User('muthu');
+    Userr user3 = Userr('muthu');
     List<Tag> tags = [Tag('30092020','Present'), Tag('31092020','Absent'), Tag('1102020','Absent')];
     tutorials.add(new Tutorial(user3,tags));
-    User user4 = User('mutu');
+    Userr user4 = Userr('mutu');
     List<Tag> tags4 = [Tag('30092020','Present'), Tag('31092020','Absent'), Tag('1102020','Absent')];
     tutorials.add(new Tutorial(user4,tags4));
   // _list = getdata();
@@ -1961,6 +1970,6 @@ class _ReportState extends State<Report> {
       ),
     );
   }
-}*/
+}
 
 
