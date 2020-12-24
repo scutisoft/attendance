@@ -1868,7 +1868,8 @@ class _ReportState extends State<Report> {
                                   DataCell(
                                     Text(pr.attend,style: GoogleFonts.roboto(color: Colors.grey[500]),),
                                   ),
-                                ]),
+                                ]
+                            ),
                           )
                           .toList(),
                     )
