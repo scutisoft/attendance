@@ -212,12 +212,12 @@ class _HomeScreenmainState extends State<HomeScreenmain>
     var url = 'https://thermogenetic-membr.000webhostapp.com/attendance.php';
     var data = {'email': widget.userdetails[0].email, 'name':widget.userdetails[0].name,
       'date':da, 'attendance':'present', 'cintime':da2.substring(11,19),'couttime':'',
-      'late':DateTime.parse(da2).difference(DateTime.parse(DateFormat("yyyy-MM-dd 09:00:00").format(DateTime.now()))).toString().substring(0,4),
+      'late':DateTime.parse(da2).difference(DateTime.parse(DateFormat("yyyy-MM-dd 10:00:00").format(DateTime.now()))).toString().substring(0,4),
       'extra':''
     };
     var response = await http.post(url, body: json.encode(data));
-    print(DateTime.parse(da2).difference(DateTime.parse(DateFormat("yyyy-MM-dd 09:00:00").format(DateTime.now()))).toString().substring(0,4));
-    print(response.body.toString());
+    // print(DateTime.parse(da2).difference(DateTime.parse(DateFormat("yyyy-MM-dd 10:00:00").format(DateTime.now()))).toString().substring(0,4));
+    // print(response.body.toString());
     rad = "You are in Tetrosoft";
     this._setStatus("In");
     todaydetails(widget.userdetails[0].email, df.format(DateTime.now()));
@@ -225,8 +225,8 @@ class _HomeScreenmainState extends State<HomeScreenmain>
 
 
   radiuscheck(double lat, double long, String da, String da2) {
-    if(13.0646661 <= i && i <= 13.065){
-      if(80.1773847<=j&&j<=80.177489){
+    // if(13.0646661 <= i && i <= 13.065){
+      if(80.1771847<=j&&j<=80.177689){
         setState(() {
            insertAttend(lat, long, da, da2);
 
@@ -238,18 +238,18 @@ class _HomeScreenmainState extends State<HomeScreenmain>
           loginloader=false;
         });
       }
-    }else{
-      setState(() {
-        rad = "You are not in Tetrosoft";
-        this._setStatus("away");
-        loginloader=false;
-      });
-    }
+    // }else{
+    //   setState(() {
+    //     rad = "You are not in Tetrosoft";
+    //     this._setStatus("away");
+    //     loginloader=false;
+    //   });
+    // }
   }
 
   addcoutdata(String email,String da, String da2) async {
     var url = 'https://thermogenetic-membr.000webhostapp.com/addcouttime.php';
-    var data = {'email': email, 'date' : da, 'couttime':da2.substring(11,19), 'extra':DateTime.parse(da2).difference(DateTime.parse(DateFormat("yyyy-MM-dd 18:00:00").format(DateTime.now()))).toString().substring(0,4)};
+    var data = {'email': email, 'date' : da, 'couttime':da2.substring(11,19), 'extra':DateTime.parse(da2).difference(DateTime.parse(DateFormat("yyyy-MM-dd 19:00:00").format(DateTime.now()))).toString().substring(0,4)};
     var response = await http.post(url, body: json.encode(data));
     todaydetails(widget.userdetails[0].email, df.format(DateTime.now()));
   }
@@ -526,8 +526,8 @@ class _HomeScreenmainState extends State<HomeScreenmain>
                 SizedBox(
                   height: hei * 0.03,
                 ),
-                Text(longitudedata),
-                Text(latitudedata),
+                // Text(longitudedata),
+                // Text(latitudedata),
                 cintime != null
                     ? Text('  Check In Time: $cintime',style: GoogleFonts.roboto(),)
                     : Container(),
