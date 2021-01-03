@@ -1626,6 +1626,9 @@ class _ReportState extends State<Report> {
     dates.add("30092020");
     dates.add("31092020");
     dates.add("11092020");
+    dates.add("30092020");
+    dates.add("31092020");
+    dates.add("11092020");
     Userr user3 = Userr('muthu');
     List<Tag> tags = [Tag('30092020','Present'), Tag('31092020','Absent'), Tag('1102020','Absent')];
     tutorials.add(new Tutorial(user3,tags));
@@ -1836,21 +1839,22 @@ class _ReportState extends State<Report> {
                     scrollDirection: Axis.horizontal,
                     child: DataTable(
 
-                      columns: [
-
-                        DataColumn(
-                          label: Text("Date",style: GoogleFonts.roboto(fontWeight: FontWeight.bold,fontSize: 16),),
-                          numeric: false,
-                        ),
-                        DataColumn(
-                          label: Text("Name",style: GoogleFonts.roboto(fontWeight: FontWeight.bold,fontSize: 16)),
-                          numeric: false,
-                        ),
-                        DataColumn(
-                          label: Text("Attendance",style: GoogleFonts.roboto(fontWeight: FontWeight.bold,fontSize: 16)),
-                          numeric: false,
-                        ),
-                      ],
+                      columns:dates.map((e) => DataColumn(label: Text(e))).toList(),
+                      // [
+                      //
+                      //   DataColumn(
+                      //     label: Text("Date",style: GoogleFonts.roboto(fontWeight: FontWeight.bold,fontSize: 16),),
+                      //     numeric: false,
+                      //   ),
+                      //   DataColumn(
+                      //     label: Text("Name",style: GoogleFonts.roboto(fontWeight: FontWeight.bold,fontSize: 16)),
+                      //     numeric: false,
+                      //   ),
+                      //   DataColumn(
+                      //     label: Text("Attendance",style: GoogleFonts.roboto(fontWeight: FontWeight.bold,fontSize: 16)),
+                      //     numeric: false,
+                      //   ),
+                      // ],
                       rows: pr
                           .map(
                             (pr) => DataRow(

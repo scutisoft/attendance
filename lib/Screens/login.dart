@@ -5,6 +5,7 @@ import 'package:attendance/models/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,6 +27,35 @@ class _LoginPageState extends State<LoginPage> {
   bool passwordvisible;
   bool wronpass;
   bool wrongemail;
+
+  String prefEmail;
+  String prefPassword;
+
+  SharedPreferences _Loginprefs;
+  static const String useremail = 'email';
+  static const String password = 'password';
+
+  void _loadCredentials() {
+    setState(() {
+      this.prefEmail = this._Loginprefs.getString(useremail) ?? "";
+      this.prefPassword = this._Loginprefs.getString(password) ?? "";
+    });
+    if(prefEmail.isNotEmpty&&prefPassword.isNotEmpty){
+      setState(() {
+        emailController.text=prefEmail;
+        passwordController.text=prefPassword;
+      });
+    }
+    print(prefEmail.isEmpty);
+    print(prefPassword);
+
+  }
+
+  Future<Null> _setCredentials(String email,String pass) async {
+    await this._Loginprefs.setString(useremail, email);
+    await this._Loginprefs.setString(password, pass);
+    // _loadCredentials();
+  }
 
   List<User> users;
   _launchURL() async {
@@ -84,6 +114,12 @@ class _LoginPageState extends State<LoginPage> {
     passwordvisible=true;
     wronpass=false;
     wrongemail=false;
+    SharedPreferences.getInstance()
+      ..then((prefs) {
+        setState(() => this._Loginprefs = prefs);
+
+        _loadCredentials();
+      });
     super.initState();
   }
 
@@ -128,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                    errorBorder: InputBorder.none,
                    disabledBorder: InputBorder.none,
                     prefixIcon: Icon(Icons.mail,size: 20,),
-                   contentPadding: EdgeInsets.only(left: 30,top: 15),
+                   // contentPadding: EdgeInsets.only(left: 30,top: 15),
                    errorText: wrongemail?"Email doesnt exists":null,
 
 
@@ -152,45 +188,45 @@ class _LoginPageState extends State<LoginPage> {
              SizedBox(height: hei*0.02,),
 
 
-             Theme(data:  Theme.of(context).copyWith(
-                 primaryColor: Color(0xFF3470de)),
+             Container(
+               height: hei*0.065,
+               decoration:BoxDecoration(
+                   color: Color(0xFFf0f4f7),
+                   borderRadius: BorderRadius.circular(10)
+               ),
+               child: Theme(data:  Theme.of(context).copyWith(
+                   primaryColor: Color(0xFF3470de)),
 
-                 child: TextFormField(
-                   decoration: InputDecoration(
-                       hintText: "Password",
-                      // fillColor: Colors.red,
-                       focusColor: Color(0xFFf0f4f7),
-                      hoverColor: Color(0xFFf0f4f7),
-                       border: OutlineInputBorder(
-                         borderRadius: BorderRadius.circular(5),
-                         borderSide: BorderSide(color: Colors.white)
-                       ),
-                     // focusedBorder: InputBorder.none,
+                   child: TextFormField(
+                     decoration: InputDecoration(
+                         hintText: "Password",
+                        // fillColor: Colors.red,
+                         focusColor: Color(0xFFf0f4f7),
+                        hoverColor: Color(0xFFf0f4f7),
+                       border: InputBorder.none,
+                       focusedBorder: InputBorder.none,
                        enabledBorder: InputBorder.none,
                        errorBorder: InputBorder.none,
-                       focusedBorder: OutlineInputBorder(
-                         borderSide: BorderSide(color: Colors.white),
-                         borderRadius: BorderRadius.circular(10.0),
-                       ),
-                      disabledBorder: InputBorder.none,
-                       prefixIcon: Icon(Icons.lock,size: 20,),
-                       suffixIcon:IconButton(
-                         icon:Icon(
-                           passwordvisible ? Icons.visibility_off: Icons.visibility,size: 20,
-                           // color: Theme.of(context).red,
+                       disabledBorder: InputBorder.none,
+                         prefixIcon: Icon(Icons.lock,size: 20,),
+                         suffixIcon:IconButton(
+                           icon:Icon(
+                             passwordvisible ? Icons.visibility_off: Icons.visibility,size: 20,
+                             // color: Theme.of(context).red,
+                           ),
+                           onPressed: (){
+                             setState(() {
+                               passwordvisible =!passwordvisible;
+                             });
+                           },
                          ),
-                         onPressed: (){
-                           setState(() {
-                             passwordvisible =!passwordvisible;
-                           });
-                         },
-                       ),
-                       errorText: wronpass?"Password wrong":null,
-                       contentPadding: EdgeInsets.only(left: 30,top: 15)
+                         errorText: wronpass?"Password wrong":null,
+                         // contentPadding: EdgeInsets.only(left: 30,top: 15)
+                     ),
+                     controller: passwordController,
+                     obscureText: passwordvisible,
                    ),
-                   controller: passwordController,
-                   obscureText: passwordvisible,
-                 ),
+               ),
              ),
 
 
@@ -206,7 +242,9 @@ class _LoginPageState extends State<LoginPage> {
                    return;
                  }
                  _loginFormKey.currentState.save();
-
+                 if(prefEmail.isEmpty && prefPassword.isEmpty){
+                   _setCredentials(emailController.text, passwordController.text);
+                 }
                  userLogin();
 
                },
