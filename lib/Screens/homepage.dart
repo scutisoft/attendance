@@ -478,6 +478,10 @@ class _HomeScreenmainState extends State<HomeScreenmain>
                 !loginloader?RaisedButton(onPressed: (){
                   setState(() {
                     loginloader=true;
+                    da = df.format(DateTime.now());
+                    da2 = df2.format(DateTime.now());
+                    print("DA -${da}");
+                    print("DA2-${da2}");
                   });
                   getCurrentlocation(da, da2);
                   todaydetails(userid, da);

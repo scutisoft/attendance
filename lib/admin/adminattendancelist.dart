@@ -445,7 +445,7 @@ class PresentCardSql extends StatelessWidget {
                                       height: 1.5),
                                   children: <TextSpan>[
                                     TextSpan(
-                                        text: "0.00 h",
+                                        text: users[index].extra.isNotEmpty?"${users[index].extra}":"0.00 h",
                                         style: TextStyle(
                                             color: Color(0xFF225EFB),
                                             fontSize: 12,
@@ -1462,7 +1462,8 @@ class _ReportState extends State<Report> {
   List<Tag> tags;
   DateFormat sd;
 
-  DateTime selectedfromDate=DateTime.now();
+   DateTime selectedfromDate=DateTime.now();
+  String selectedfromDateString;
 
   _selectfromDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -1473,7 +1474,7 @@ class _ReportState extends State<Report> {
     );
     if (picked != null && picked != selectedfromDate)
       setState(() {
-        selectedfromDate = picked;
+        selectedfromDateString = sd.format(picked);
       });
   }
 
@@ -1645,7 +1646,7 @@ class _ReportState extends State<Report> {
   Widget build(BuildContext context) {
     double hei = MediaQuery.of(context).size.height;
     double wid = MediaQuery.of(context).size.width;
-    sd = DateFormat("ddMMyyyy");
+    sd = DateFormat("dd-MM-yyyy");
 
     return Scaffold(
         appBar: AppBar(
@@ -1956,7 +1957,7 @@ class _ReportState extends State<Report> {
           pdfLib.Header(child: pdfLib.Text(_value)),
           pdfLib.Table.fromTextArray(context: context, data: <List<String>>[
           //  tags.map((e) => e.date),
-           <String>['Date', 'Name','Attendance'],
+           dates,
             ...pr.map((item) => [item.date, item.uid, item.attend.toString()])
 
           ]
