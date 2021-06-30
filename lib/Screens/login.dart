@@ -75,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
 
     var data = {'email': email, 'password' : password};
 
-    var response = await http.post(url, body: json.encode(data));
+    var response = await http.post(Uri.parse(url), body: json.encode(data));
 
     final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
     users= parsed.map<User>((json) =>User.fromJson(json)).toList();

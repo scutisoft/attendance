@@ -42,7 +42,6 @@ dependencies:
   image_cropper:
   path:
   pdf:
-  flutter_full_pdf_viewer:
   share_extend:
 dev_dependencies:
   flutter_test:

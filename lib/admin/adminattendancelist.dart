@@ -145,7 +145,7 @@ class _AdminAttendanceListState extends State<AdminAttendanceList>
 
     var data = {'date': firedate};
 
-    var response = await http.post(url, body: json.encode(data));
+    var response = await http.post(Uri.parse(url), body: json.encode(data));
     final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
     return parsed.map<Attendance>((json) =>Attendance.fromJson(json)).toList();
    // return users;
@@ -1174,7 +1174,7 @@ class _AdminAbsentListState extends State<AdminAbsentList>
 
     var data = {'date': firedate};
 
-    var response = await http.post(url, body: json.encode(data));
+    var response = await http.post(Uri.parse(url), body: json.encode(data));
     final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
     return parsed.map<Attendance>((json) =>Attendance.fromJson(json)).toList();
     // return users;
@@ -1969,12 +1969,12 @@ class _ReportState extends State<Report> {
     final String dir = (await getApplicationDocumentsDirectory()).path;
     final String path = '$dir/report.pdf';
     final File file = File(path);
-    await file.writeAsBytes(pdf.save());
-    Navigator.of(context).push(
+    //await file.writeAsBytes(pdf.save());
+   /* Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => PdfViewerPage(path: path),
       ),
-    );
+    );*/
   }
 }
 

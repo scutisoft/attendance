@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
 
     var data = {'email': email, 'password' : password};
 
-    var response = await http.post(url, body: json.encode(data));
+    var response = await http.post(Uri.parse(url), body: json.encode(data));
 
     final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
     setState(() {
@@ -215,7 +215,7 @@ class _HomeScreenmainState extends State<HomeScreenmain>
       'late':DateTime.parse(da2).difference(DateTime.parse(DateFormat("yyyy-MM-dd 10:00:00").format(DateTime.now()))).toString().substring(0,4),
       'extra':''
     };
-    var response = await http.post(url, body: json.encode(data));
+    var response = await http.post(Uri.parse(url), body: json.encode(data));
     // print(DateTime.parse(da2).difference(DateTime.parse(DateFormat("yyyy-MM-dd 10:00:00").format(DateTime.now()))).toString().substring(0,4));
     // print(response.body.toString());
     rad = "You are in Tetrosoft";
@@ -250,7 +250,7 @@ class _HomeScreenmainState extends State<HomeScreenmain>
   addcoutdata(String email,String da, String da2) async {
     var url = 'https://thermogenetic-membr.000webhostapp.com/addcouttime.php';
     var data = {'email': email, 'date' : da, 'couttime':da2.substring(11,19), 'extra':DateTime.parse(da2).difference(DateTime.parse(DateFormat("yyyy-MM-dd 19:00:00").format(DateTime.now()))).toString().substring(0,4)};
-    var response = await http.post(url, body: json.encode(data));
+    var response = await http.post(Uri.parse(url), body: json.encode(data));
     todaydetails(widget.userdetails[0].email, df.format(DateTime.now()));
   }
 
@@ -261,7 +261,7 @@ class _HomeScreenmainState extends State<HomeScreenmain>
   todaydetails(String useremail, String da) async {
     var url = 'https://thermogenetic-membr.000webhostapp.com/todaydetails.php';
     var data = {'email': useremail, 'date' : da};
-    var response = await http.post(url, body: json.encode(data));
+    var response = await http.post(Uri.parse(url), body: json.encode(data));
     final parsed = json.decode(response.body);
     print("PASDAFSDSGFDGFDGFDHHSFH");
     setState(() {
@@ -313,7 +313,7 @@ class _HomeScreenmainState extends State<HomeScreenmain>
 
     var data = {'email': email, 'password' : password};
 
-    var response = await http.post(url, body: json.encode(data));
+    var response = await http.post(Uri.parse(url), body: json.encode(data));
 
     final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
     setState(() {

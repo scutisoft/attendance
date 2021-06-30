@@ -32,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     var data = {'email': email, 'password' : password};
 
-    var response = await http.post(url, body: json.encode(data));
+    var response = await http.post(Uri.parse(url), body: json.encode(data));
 
     final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
     setState(() {
@@ -102,7 +102,7 @@ class _ProfilePageState extends State<ProfilePage>
   Future getImage() async
   {
 
-    File tempImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+    File tempImage = (await ImagePicker.platform.pickImage(source: ImageSource.gallery)) as File;
     if (tempImage != null) {
       _cropImage(tempImage);
     }
@@ -139,7 +139,7 @@ class _ProfilePageState extends State<ProfilePage>
 
         var data = {'email': userdetails[0].email, 'propic' : base64Image.toString()};
 
-        var response = await http.post(url, body: json.encode(data));
+        var response = await http.post(Uri.parse(url), body: json.encode(data));
         print(response.body.toString());
         userLogin();
         });
@@ -181,7 +181,7 @@ class _ProfilePageState extends State<ProfilePage>
 
     var data = {'email': email, 'password' : password};
 
-    var response = await http.post(url, body: json.encode(data));
+    var response = await http.post(Uri.parse(url), body: json.encode(data));
 
     final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
     setState(() {
@@ -440,7 +440,7 @@ class _ProfilePageState extends State<ProfilePage>
 
                              var data = {'email': userdetails[0].email, 'name' : namee.text};
 
-                             var response = await http.post(url, body: json.encode(data));
+                             var response = await http.post(Uri.parse(url), body: json.encode(data));
 
                              setState(()  async {
 
