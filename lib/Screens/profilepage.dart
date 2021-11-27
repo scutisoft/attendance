@@ -101,13 +101,10 @@ class _ProfilePageState extends State<ProfilePage>
 
   Future getImage() async
   {
-
     File tempImage = (await ImagePicker.platform.pickImage(source: ImageSource.gallery)) as File;
     if (tempImage != null) {
       _cropImage(tempImage);
     }
-
-
   }
 
   _cropImage(File picked) async {
